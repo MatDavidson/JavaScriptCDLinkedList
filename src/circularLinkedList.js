@@ -13,14 +13,14 @@ class CircularLinkedList{
     add(item){
         let n = new Node(item);
 
-        if(this.count == 0){
+        if(this.count === 0){
             //In an empty list, make the new node the head and have it point to itself
             this.head = n;
             this.head.next = n;
             this.head.prev = n;
 
         }
-        else if(this.count == 1){
+        else if(this.count === 1){
             //List with one element, make the new node the tail. Tail's next and prev is head and vice virsa
             this.tail = n;
             this.head.next = this.tail;
@@ -48,10 +48,10 @@ class CircularLinkedList{
 
     //Removes the first occurence of the item and returns its position or -1 if unfound
     remove(item){
-        if(this.count == 0)
+        if(this.count === 0)
             return -1;
 
-        else if(this.count == 1){
+        else if(this.count === 1){
             //When removing the only item in the list, set everything to null
             this.head = null;
             this.tail = null;
@@ -73,9 +73,9 @@ class CircularLinkedList{
                 this.current.prev.next = this.current.next;
 
                 //Check if the node was the head or tail and fix accordingly
-                if(this.current == this.head)
+                if(this.current === this.head)
                     this.head = this.current.next;
-                if(this.current == this.tail)
+                if(this.current === this.tail)
                     this.tail = this.current.prev;
                 this.count--;
             }

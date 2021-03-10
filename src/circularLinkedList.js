@@ -18,6 +18,9 @@ class CircularLinkedList{
             this.head = n;
             this.head.next = n;
             this.head.prev = n;
+            this.tail = this.head;
+            this.tail.next = this.head;
+            this.tail.prev = this.head;
 
         }
         else if(this.count === 1){

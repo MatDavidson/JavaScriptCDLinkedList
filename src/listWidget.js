@@ -1,11 +1,12 @@
 import {CircularLinkedList} from './circularLinkedList.js';
 import React from 'react';
 
+var list;
 class ListWidget extends React.Component {
   constructor(props) {
     super(props);
-    var list = new CircularLinkedList();
-    this.state = { list: list, value: 'Add something to the list' };
+    list = new CircularLinkedList();
+    this.state = { lHead: list.head, lTail: list.tail, lCount: list.count, list: list, value: 'Add something to the list' };
 
     
     this.handleChange = this.handleChange.bind(this);
@@ -17,11 +18,9 @@ class ListWidget extends React.Component {
   }
 
   handleSubmit(event) {
-    let s = document.getElementById("item").value;
+    let s = document.getElementById('item').value;
     this.state.list.add(s);
-
-    this.render();
-
+    this.setState({lHead: list.head, lTail: list.tail, lCount: list.count});
     event.preventDefault();
   }
 
@@ -36,36 +35,32 @@ class ListWidget extends React.Component {
           <input type="text" id="item" value={this.state.value} onChange={this.handleChange} />
           </label>
           <input type="submit" value="Submit" />
-          <Stats list={this.state.list} />
+          
+          <Count count={this.state.lCount} />
+          <Head head={this.state.lHead} />
+          <Tail tail={this.state.lTail} />
         </form>
       </div>
     )
   }
 }
 
-function head(list) {
-    if(list.count === 0)
-      return null;
-    else
-      return list.head.item;
+function Count(props){
+  return <h3>Count: {props.count}</h3>;
 }
-function tail(list) {
-  if(list.count === 0)
-    return null;
+function Head(props){
+  if(props.head)
+    return <h3>Head: {props.head.item}</h3>
   else
-    return list.tail.item;
+    return <h3>Empty</h3>
+}
+function Tail(props){
+  if(props.tail)
+    return <h3>Tail: {props.tail.item}</h3>
+  else
+    return <h3>List</h3>
 }
 
-function Stats(props) {
-  const element = (
-    <div>
-      <h3>Count: {props.list.count}</h3>
-      <h3>Head: {head(props.list)}</h3>
-      <h3>Tail: {tail(props.list)}</h3>
-    </div>
-  );
-  return element;
-}
     
 export default ListWidget;    
 

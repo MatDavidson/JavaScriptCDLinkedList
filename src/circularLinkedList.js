@@ -18,9 +18,12 @@ class CircularLinkedList{
             this.head = n;
             this.head.next = n;
             this.head.prev = n;
+
             this.tail = this.head;
             this.tail.next = this.head;
             this.tail.prev = this.head;
+
+            this.current = this.head;
 
         }
         else if(this.count === 1){
@@ -31,6 +34,8 @@ class CircularLinkedList{
 
             this.tail.next = this.head;
             this.tail.prev = this.head;
+
+            this.current = this.tail;
         }
         else { 
             //List with more one item, make a place holder for the old tail, have its next point to the new node, make the new node the tail.
@@ -44,12 +49,14 @@ class CircularLinkedList{
 
             //Have the head's prev point to the new tail
             this.head.prev = this.tail;
+            this.current = this.tail;
             
         }
         this.count++;
     }
 
     //Removes the first occurence of the item and returns its position or -1 if unfound
+    //this should probably be implemented a little differently
     remove(item){
         if(this.count === 0)
             return -1;
@@ -81,6 +88,7 @@ class CircularLinkedList{
                 if(this.current === this.tail)
                     this.tail = this.current.prev;
                 this.count--;
+                this.current = this.current.next;
             }
             return i;
         }
@@ -122,7 +130,17 @@ class CircularLinkedList{
             this.current = this.current.prev;
         }
     }
+
+    nextNode(){
+        this.current = this.current.next;
+    }
+
+    prevNode(){
+        this.current = this.current.prev;
+    }
 }
+
+
 
 function Node(item){
         this.item = item;

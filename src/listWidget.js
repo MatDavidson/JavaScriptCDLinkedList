@@ -1,16 +1,20 @@
 import {CircularLinkedList} from './circularLinkedList.js';
 import React from 'react';
+import './App.css';
 
 var list;
 class ListWidget extends React.Component {
   constructor(props) {
     super(props);
     list = new CircularLinkedList();
-    this.state = { lHead: list.head, lTail: list.tail, lCount: list.count, list: list, value: 'Add something to the list' };
+    this.state = { lHead: list.head, lTail: list.tail, lCount: list.count, lCurrent: list.current, list: list };
 
     
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.next = this.next.bind(this);
+    this.prev = this.prev.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   handleChange(event) {
@@ -19,12 +23,33 @@ class ListWidget extends React.Component {
 
   handleSubmit(event) {
     let s = document.getElementById('item').value;
-    this.state.list.add(s);
-    this.setState({lHead: list.head, lTail: list.tail, lCount: list.count});
+
+    if(s !== ''){
+      document.querySelector(".inBox").value = '';
+      this.state.list.add(s);
+      this.setState({lHead: list.head, lTail: list.tail, lCount: list.count, lCurrent: list.current});
+    }
+    
     event.preventDefault();
   }
 
-  
+  next(){
+    this.state.list.nextNode();
+    this.setState({lCurrent: list.current})
+  }
+
+  prev(){
+    this.state.list.prevNode();
+    this.setState({lCurrent: list.current})
+  }
+
+  remove(){
+    let node = this.state.lCurrent;
+    this.state.list.remove(node);
+    this.setState({lHead: list.head, lTail: list.tail, lCount: list.count, lCurrent: list.current});
+  }
+
+
 
   render() {
     return(
@@ -32,17 +57,37 @@ class ListWidget extends React.Component {
         <form onSubmit={this.handleSubmit}>
           <label>
           Item:
-          <input type="text" id="item" value={this.state.value} onChange={this.handleChange} />
+          <input className="inBox" type="text" id="item" defaultValue="Add something" onChange={this.handleChange} />
           </label>
-          <input type="submit" value="Submit" />
-          
-          <Count count={this.state.lCount} />
-          <Head head={this.state.lHead} />
-          <Tail tail={this.state.lTail} />
+          <input type="submit" value="Add" />
         </form>
+
+        <div className="flexbox-container">
+          <div className="widget">
+          <LeftSide count={this.state.lCount} head={this.state.lHead} tail={this.state.lTail} />
+          </div>
+          <div className="widget">
+            <Current current = {this.state.lCurrent}/>
+            <span>
+              <button onClick={this.next}>Next</button>
+              <button onClick={this.prev}>Prev</button>
+            </span>
+            <div>
+            <button onClick={this.remove}>Remove</button>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
+}
+
+
+
+function LeftSide(props){
+  return (<div><Count count={props.count} />
+  <Head head={props.head} />
+  <Tail tail={props.tail} /></div>);
 }
 
 function Count(props){
@@ -61,6 +106,12 @@ function Tail(props){
     return <h3>List</h3>
 }
 
+function Current(props){
+  if(props.current)
+    return <h3>Current: {props.current.item}</h3>
+  else
+    return <h3>Current: Null</h3>
+}
     
 export default ListWidget;    
 
